@@ -8,7 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/User.dart';
 
 class AppProvider with ChangeNotifier {
-  late  String  _firebaseUrl="trips";
+ // late  String  _firebaseUrl="trips";
+late  String  _firebaseUrl="jerbaTrips";
+
   late bool isLoggedIn = false;
   User? _user;
   List<dynamic> _files = [];
@@ -19,8 +21,8 @@ class AppProvider with ChangeNotifier {
   late bool deleteOption = false;
   List<Trips> _trips = [];
   bool loadingPub = false;
-  late String _messageUrl ="message";
-  late String _nameDisplayer= "Medenine";
+  late String _messageUrl ="jerbaMessage";
+  late String _nameDisplayer= "JERBA";
 
   Future setLoggedIn({required bool status}) async {
     isLoggedIn = status;

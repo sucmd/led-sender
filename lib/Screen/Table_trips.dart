@@ -346,12 +346,7 @@ if( length > 1 )
                               child: TextFormField(
                                 //autovalidate: true,
                                 controller: updateFormFrDestination,
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
-
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: "DESTINATION FR ",
@@ -371,10 +366,6 @@ if( length > 1 )
                               child: TextFormField(
                                 //autovalidate: true,
                                 controller: updateFormArDestination,
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
 
                                 decoration: const InputDecoration(
@@ -831,7 +822,7 @@ if( length > 1 )
 
     */
 
-          ToggleSwitch(
+          /*ToggleSwitch(
             minWidth: 90.0,
             cornerRadius: 20.0,
             activeBgColors: [
@@ -841,9 +832,9 @@ if( length > 1 )
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.blue,
             inactiveFgColor: Colors.white,
-            initialLabelIndex: switchIndex,
-            totalSwitches: 2,
-            labels: ['Medenine', 'Jerba'],
+            initialLabelIndex: 0,
+            totalSwitches: 1,
+            labels: const ['Jerba'],
             radiusStyle: true,
             onToggle: (index) {
               if (index == 0) {
@@ -852,18 +843,18 @@ if( length > 1 )
                 _appProvider.setFirebaseUrl();
              //    getTripsHandler();
          //     getmessage();
-              } else {
+              } /*else {
                 _appProvider.setDisplyername("Jerba");
                 _appProvider.setFirebaseUrl();
               }
-             
+*/             
               getTripsHandler();
               getmessage();
               setState(() {
                   switchIndex = index;
                 });
             },
-          ),
+          ),*/
 
 /*
 Switch(
