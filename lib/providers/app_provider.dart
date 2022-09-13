@@ -66,7 +66,7 @@ late  String  _firebaseUrl="jerbaTrips";
 
   addTrip(trip) {
     _trips.add(trip);
-    _trips.sort((a, b) => (a.depart.toString()).compareTo(b.depart.toString()));
+    _trips.sort((a, b) => (a.t_depart.toString()).compareTo(b.t_depart.toString()));
 
     notifyListeners();
   }
@@ -78,14 +78,14 @@ late  String  _firebaseUrl="jerbaTrips";
         _trips[i] = trip;
       }
       _trips
-          .sort((a, b) => (a.depart.toString()).compareTo(b.depart.toString()));
+          .sort((a, b) => (a.t_depart.toString()).compareTo(b.t_depart.toString()));
 
       notifyListeners();
     }
   }
 
   setTrips(List<Trips> trips) {
-    trips.sort((a, b) => (a.depart.toString()).compareTo(b.depart.toString()));
+    trips.sort((a, b) => (a.t_depart.toString()).compareTo(b.t_depart.toString()));
 
     _trips = trips;
     notifyListeners();

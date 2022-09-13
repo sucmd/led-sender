@@ -7,6 +7,7 @@ import 'package:srtm/models/trips.dart';
 import 'package:srtm/providers/app_provider.dart';
 
 class FireBaseService {
+  static const firebaseUrl = "https://transitdatapub-default-rtdb.firebaseio.com/trips.json";
   final AppProvider appProvider;
   final fireBaseClient = http.Client();
   FireBaseService({required this.appProvider});
@@ -17,8 +18,7 @@ class FireBaseService {
     try {
       response = await fireBaseClient.post(
           Uri.parse(
-           "https://medenineproject-default-rtdb.firebaseio.com/medenineproject-default-rtdb/${appProvider.firebaseUrl}.json",
-  // appProvider.firebaseUrl
+           firebaseUrl,
           ),
           body: json.encode(data));
     } catch (e) {
@@ -34,7 +34,7 @@ class FireBaseService {
     try {
       response = await fireBaseClient.get(
         Uri.parse(
-          "https://medenineproject-default-rtdb.firebaseio.com/medenineproject-default-rtdb/${appProvider.firebaseUrl}.json",
+          firebaseUrl,
           // appProvider.firebaseUrl
 
         ),
@@ -53,7 +53,7 @@ class FireBaseService {
           Uri.parse(
     //    appProvider.firebaseUrl
 
-           "https://medenineproject-default-rtdb.firebaseio.com/medenineproject-default-rtdb/${appProvider.firebaseUrl}/$key.json",
+           "$firebaseUrl/$key.json",
           ),
           body: json.encode(data));
     } catch (e) {

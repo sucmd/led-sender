@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:srtm/Widget/Footer.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:srtm/models/service.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../Services/FireBaseService.dart';
@@ -28,23 +29,36 @@ class _TabletripsState extends State<Tabletrips> {
 
   late List<Trips> _trips = [];
   double cl0width = 0.1;
-  double cl1width = 0.15;
-  double cl2width = 0.15;
-  double cl3width = 0.3;
-  double cl4width = 0.3;
+
+  double cl1width = 0.05;
+
+  double cl2width = 0.2;
+  double cl3width = 0.2;
+  double cl4width = 0.1;
+
+  double cl5width = 0.1;
+  double cl6width = 0.1;
+  double cl7width = 0.1;
+  double cl8width = 0.1;
 
   bool showActionBar = false;
 //////////////// update controllers ///////////////
   final updateFormKey = GlobalKey<FormState>();
-  final updateFormLigne = TextEditingController();
+  final updateFormBus = TextEditingController();
   final TextEditingController updateFormDepart = TextEditingController();
-  final updateFormArDestination = TextEditingController();
-  final updateFormFrDestination = TextEditingController();
+  final updateFormVoyage = TextEditingController();
+  final updateFormFrVoyage = TextEditingController();
+
+  final updateFormStatusFr = TextEditingController();
+
+  final updateFormStatus = TextEditingController();
+
+  final updateFormArrive = TextEditingController();
 /////////////////// add controllers ////////////////
   final addFormKey = GlobalKey<FormState>();
-  final addFormLigne = TextEditingController();
-  final addFormArDestination = TextEditingController();
-  final addFormFrDestination = TextEditingController();
+  final addFormbus = TextEditingController();
+  final addFormvoyage = TextEditingController();
+  final addFormvoyage_fr = TextEditingController();
 
   final TextEditingController addFormDepart = TextEditingController();
 /////////////////////////////////////////////////////
@@ -55,8 +69,8 @@ class _TabletripsState extends State<Tabletrips> {
 
   late Message msg = Message(
       message: "الشركة الجهوية للنقل بمدنين تتمنى لحرفائها الكرام سفرة ممتعة");
-      
-       late   int? switchIndex =0;
+
+  late int? switchIndex = 0;
 ///////////////////////////////////////////////////
 
   getTime(int? timeStamp) {
@@ -110,11 +124,23 @@ class _TabletripsState extends State<Tabletrips> {
         var data = json.decode(response!.body);
         for (var item in data.keys) {
           var e = Trips(
-              key: item,
-              ligne: data[item]['ligne'],
-              depart: data[item]['depart'],
-              arDestination: data[item]['arDestination'],
-              frDestination: data[item]['frDestination']);
+            key: item,
+            bus: data[item]['bus'],
+            service: Service(
+                Friday: data[item]["services"]["Friday"],
+                Monday: data[item]["services"]["Monday"],
+                Saturday: data[item]["services"]["Saturday"],
+                Sunday: data[item]["services"]["Sunday"],
+                Thursday: data[item]["services"]["Thursday"],
+                Tuesday: data[item]["services"]["Tuesday"],
+                Wednesday: data[item]["services"]["Wednesday"]),
+            status: data[item]["status"],
+            status_fr: data[item]["status_fr"],
+            t_arrivee: data[item]["t_arrivee"],
+            t_depart: data[item]["t_depart"],
+            voyage: data[item]["voyage"],
+            voyage_fr: data[item]["voyage_fr"],
+          );
           _trips.add(e);
         }
       }
@@ -127,8 +153,8 @@ class _TabletripsState extends State<Tabletrips> {
     super.initState();
     addFormDepart.text = "";
     updateFormDepart.text = "";
-    updateFormArDestination.text = '';
-    updateFormFrDestination.text = '';
+    updateFormVoyage.text = '';
+    updateFormFrVoyage.text = '';
 
     getTripsHandler();
     getmessage();
@@ -136,74 +162,68 @@ class _TabletripsState extends State<Tabletrips> {
   }
 
   showAlert(BuildContext context, id) {
-var length = _appProvider.getTrips().length;
-print("len $length");
-if( length > 1 )
- {
-     showDialog(
-      context: context,
-      builder: (BuildContext context) { 
-        return AlertDialog(
-          title: const Text('SUPPRESSION'),
-          content: const Text("Êtes-vous sûr de vouloir supprimer?"),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  child: const Text("OUI"),
-                  onPressed: () {
-                    //Put your code here which you want to execute on Yes button click.
-                   if(length > 1) 
-                    _deleteTrip(id, context);
-             
-                  },
-                ),
-                TextButton(
-                  child: const Text("ANNULER"),
-                  style: TextButton.styleFrom(
-                    primary: Colors.red,
+    var length = _appProvider.getTrips().length;
+    print("len $length");
+    if (length > 1) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('SUPPRESSION'),
+            content: const Text("Êtes-vous sûr de vouloir supprimer?"),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    child: const Text("OUI"),
+                    onPressed: () {
+                      //Put your code here which you want to execute on Yes button click.
+                      if (length > 1) _deleteTrip(id, context);
+                    },
                   ),
-                  onPressed: () {
-                    //Put your code here which you want to execute on Cancel button click.
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
- else {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) { 
-       return   AlertDialog(
-          title: const Text('SUPPRESSION'),
-          content: const Text("Vous ne pouvez pas supprimer le dernier voyage"),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  child: const Text("OUI"),
-                  onPressed: () {
-                    //Put your code here which you want to execute on Yes button click.
-                   
-                   Navigator.pop(context);
-                  },
-                ),
-           
-              ],
-            ),
-          ],
-        );
-      });
+                  TextButton(
+                    child: const Text("ANNULER"),
+                    style: TextButton.styleFrom(
+                      primary: Colors.red,
+                    ),
+                    onPressed: () {
+                      //Put your code here which you want to execute on Cancel button click.
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('SUPPRESSION'),
+              content:
+                  const Text("Vous ne pouvez pas supprimer le dernier voyage"),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      child: const Text("OUI"),
+                      onPressed: () {
+                        //Put your code here which you want to execute on Yes button click.
 
- }
- 
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          });
+    }
   }
 
   _deleteTrip(key, ctx) async {
@@ -256,11 +276,13 @@ if( length > 1 )
   }
 
   editTrip(Trips item) {
-    updateFormLigne.text = item.ligne;
-    updateFormArDestination.text = item.arDestination;
-    updateFormFrDestination.text = item.frDestination;
-
-    updateFormDepart.text = getTime(item.depart);
+    updateFormBus.text = item.bus;
+    updateFormVoyage.text = item.voyage;
+    updateFormFrVoyage.text = item.voyage_fr;
+    updateFormDepart.text = getTime(item.t_depart);
+    updateFormArrive.text = getTime(item.t_arrivee);
+    updateFormStatus.text = item.status;
+    updateFormStatusFr.text = item.status_fr;
 
     showDialog(
         context: context,
@@ -280,6 +302,67 @@ if( length > 1 )
                           /* mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,*/
                           children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: TextFormField(
+                                //autovalidate: true,
+                                controller: updateFormBus,
+                                textInputAction: TextInputAction.next,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "bus",
+                                ),
+                                validator: MultiValidator(
+                                  [
+                                    RequiredValidator(
+                                        errorText: "Obligatoire * "),
+                                    //  EmailValidator(errorText: "Enter valid email id"),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: TextFormField(
+                                //autovalidate: true,
+                                controller: updateFormFrVoyage,
+                                textInputAction: TextInputAction.next,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "DESTINATION FR ",
+                                ),
+                                validator: MultiValidator(
+                                  [
+                                    RequiredValidator(
+                                        errorText: "Obligatoire * "),
+                                    //  EmailValidator(errorText: "Enter valid email id"),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: TextFormField(
+                                //autovalidate: true,
+                                controller: updateFormVoyage,
+                                textInputAction: TextInputAction.next,
+
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "DESTINATION AR ",
+                                ),
+                                validator: MultiValidator(
+                                  [
+                                    RequiredValidator(
+                                        errorText: "Obligatoire * "),
+                                    //  EmailValidator(errorText: "Enter valid email id"),
+                                  ],
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
@@ -292,7 +375,7 @@ if( length > 1 )
                                     //icon of text field
                                     labelText: "Depart",
                                     hintText: getTime(
-                                        item.depart) //label text of field
+                                        item.t_depart) //label text of field
                                     ),
                                 readOnly: true,
                                 validator: MultiValidator(
@@ -340,37 +423,76 @@ if( length > 1 )
                                 },
                               ),
                             ),
-                            Container(
+                            Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
                               child: TextFormField(
-                                //autovalidate: true,
-                                controller: updateFormFrDestination,
-                                textInputAction: TextInputAction.next,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "DESTINATION FR ",
-                                ),
+                                controller: updateFormArrive,
+                                textInputAction: TextInputAction
+                                    .next, //editing controller of this TextField
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    //icon of text field
+                                    labelText: "Arrivee",
+                                    hintText: getTime(
+                                        item.t_arrivee) //label text of field
+                                    ),
+                                readOnly: true,
                                 validator: MultiValidator(
                                   [
                                     RequiredValidator(
                                         errorText: "Obligatoire * "),
                                     //  EmailValidator(errorText: "Enter valid email id"),
                                   ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                //autovalidate: true,
-                                controller: updateFormArDestination,
-                                textInputAction: TextInputAction.next,
+                                ), //set it true, so that user will not able to edit text
+                                onTap: () async {
+                                  TimeOfDay? pickedTime = await showTimePicker(
+                                    initialTime: TimeOfDay.now(),
+                                    cancelText: "Annuler",
+                                    confirmText: "OK",
+                                    helpText: "Selectionner l'heure de depart",
+                                    hourLabelText: "Heure",
+                                    context: context,
+                                  );
 
+                                  if (pickedTime != null) {
+                                    print(
+                                        "pickedTimeFormat:${pickedTime.format(context)}");
+
+                                    DateTime parsedTime = DateFormat.Hm().parse(
+                                        pickedTime.format(context).toString());
+                                    //converting to DateTime so that we can further format on different pattern.
+                                    print("parsedTime:$parsedTime");
+
+                                    updateStartTimeTimeStamp = DateFormat.Hm()
+                                        .parse(pickedTime.format(context))
+                                        .microsecondsSinceEpoch; //output 1970-01-01 22:53:00.000
+                                    String formattedTime =
+                                        DateFormat('HH:mm').format(parsedTime);
+                                    print(
+                                        "formattedTime:$formattedTime"); //output 14:59:00
+                                    //DateFormat() is from intl package, you can format the time on any pattern you need.
+
+                                    setState(() {
+                                      updateFormArrive.text =
+                                          formattedTime; //set the value of text field.
+                                    });
+                                  } else {
+                                    print("Heure non selectionnée");
+                                  }
+                                },
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: TextFormField(
+                                //autovalidate: true,
+                                controller: updateFormStatus,
+                                textInputAction: TextInputAction.next,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: "DESTINATION AR ",
+                                  labelText: "Status",
                                 ),
                                 validator: MultiValidator(
                                   [
@@ -386,11 +508,11 @@ if( length > 1 )
                                   horizontal: 10, vertical: 10),
                               child: TextFormField(
                                 //autovalidate: true,
-                                controller: updateFormLigne,
+                                controller: updateFormStatusFr,
                                 textInputAction: TextInputAction.next,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: "Ligne",
+                                  labelText: "Status  fr ",
                                 ),
                                 validator: MultiValidator(
                                   [
@@ -414,21 +536,28 @@ if( length > 1 )
                   FlatButton(
                     onPressed: () async {
                       if (updateFormKey.currentState!.validate()) {
-                        if (updateFormLigne.text.isEmpty ||
+                        if (updateFormBus.text.isEmpty ||
                             updateFormDepart.text.isEmpty ||
-                            updateFormArDestination.text.isEmpty ||
-                            updateFormFrDestination.text.isEmpty) {
+                            updateFormArrive.text.isEmpty ||
+                            updateFormVoyage.text.isEmpty ||
+                            updateFormFrVoyage.text.isEmpty ||
+                            updateFormStatus.text.isEmpty ||
+                            updateFormStatusFr.text.isEmpty) {
                           print('FormUpdateIsEmpty');
                         } else {
-                          var timestamp = item.depart;
+                          var timestamp = item.t_depart;
 
                           var tripData = {
-                            'ligne': updateFormLigne.text,
+                            'bus': updateFormBus.text,
+                            
                             'depart': updateStartTimeTimeStamp == 0
                                 ? timestamp
                                 : updateStartTimeTimeStamp,
-                            'frDestination': updateFormFrDestination.text,
-                            'arDestination': updateFormArDestination.text
+
+                                'status':updateFormStatus.text,
+                                'status_fr':updateFormStatusFr.text,
+                            'voyage_fr': updateFormFrVoyage.text,
+                            'voyage': updateFormVoyage.text
                           };
                           _updateTrip(tripData, item.key, context);
 
@@ -473,15 +602,29 @@ if( length > 1 )
                   _appProvider.updateTrip(
                     key,
                     Trips(
-                        depart: data["depart"],
-                        ligne: data['ligne'],
-                        arDestination: data["arDestination"],
-                        frDestination: data["frDestination"]),
+                      t_depart: data["depart"],
+                      bus: data['bus'],
+                      voyage: data["voyage"],
+                      voyage_fr: data["voyage_fr"],
+                      status: "jkjk",
+                      status_fr: "jghfyt",
+                      t_arrivee: 121021,
+
+                      ///////////// update this methode //////////
+                      service: Service(
+                          Friday: true,
+                          Monday: true,
+                          Saturday: true,
+                          Sunday: true,
+                          Thursday: true,
+                          Tuesday: true,
+                          Wednesday: true),
+                    ),
                   ),
-                  updateFormLigne.clear(),
+                  updateFormBus.clear(),
                   updateFormDepart.clear(),
-                  updateFormArDestination.clear(),
-                  updateFormFrDestination.clear(),
+                  updateFormVoyage.clear(),
+                  updateFormFrVoyage.clear(),
                   setState(() {
                     showActionBar = false;
                   }),
@@ -582,7 +725,7 @@ if( length > 1 )
                                 horizontal: 10, vertical: 10),
                             child: TextFormField(
                               //autovalidate: true,
-                              controller: addFormFrDestination,
+                              controller: addFormvoyage_fr,
                               textInputAction: TextInputAction.next,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
@@ -602,7 +745,7 @@ if( length > 1 )
                                 horizontal: 10, vertical: 10),
                             child: TextFormField(
                               //autovalidate: true,
-                              controller: addFormArDestination,
+                              controller: addFormvoyage,
                               textInputAction: TextInputAction.next,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
@@ -622,11 +765,11 @@ if( length > 1 )
                                 horizontal: 10, vertical: 10),
                             child: TextFormField(
                               //autovalidate: true,
-                              controller: addFormLigne,
+                              controller: addFormbus,
                               textInputAction: TextInputAction.next,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: "LIGNE ",
+                                labelText: "bus ",
                               ),
                               validator: MultiValidator(
                                 [
@@ -650,24 +793,24 @@ if( length > 1 )
                 children: [
                   FlatButton(
                     onPressed: () async {
-                      if (addFormLigne.text.isEmpty ||
+                      if (addFormbus.text.isEmpty ||
                           addFormDepart.text.isEmpty ||
-                          addFormArDestination.text.isEmpty ||
-                          addFormFrDestination.text.isEmpty) {
+                          addFormvoyage.text.isEmpty ||
+                          addFormvoyage_fr.text.isEmpty) {
                       } else {
                         var tripData = {
-                          'ligne': addFormLigne.text,
+                          'bus': addFormbus.text,
                           'depart': addStartTimeTimeStamp,
-                          'frDestination': addFormFrDestination.text,
-                          'arDestination': addFormArDestination.text,
+                          'voyage_fr': addFormvoyage_fr.text,
+                          'voyage': addFormvoyage.text,
                         };
                         sendTrips(tripData, context);
                         Navigator.of(context).pop();
 
-                        addFormLigne.clear();
+                        addFormbus.clear();
                         addFormDepart.clear();
-                        addFormArDestination.clear();
-                        addFormFrDestination.clear();
+                        addFormvoyage.clear();
+                        addFormvoyage_fr.clear();
                         addStartTimeTimeStamp = 0;
                       }
                     },
@@ -707,10 +850,22 @@ if( length > 1 )
                 {
                   _appProvider.addTrip(
                     Trips(
-                        depart: data["depart"],
-                        ligne: data['ligne'],
-                        arDestination: data["arDestination"],
-                        frDestination: data["frDestination"]),
+                        t_depart: data["t_depart"],
+                        bus: data['bus'],
+                        voyage: data["voyage"],
+                        voyage_fr: data["voyage_fr"],
+                        status: "hjh",
+                        status_fr: "kjhhjgjk",
+                        t_arrivee: 1102120,
+                        ///// update this methode ////
+                        service: Service(
+                            Friday: true,
+                            Monday: true,
+                            Saturday: true,
+                            Sunday: true,
+                            Thursday: true,
+                            Tuesday: true,
+                            Wednesday: true)),
                   ),
                 }
             })
@@ -944,7 +1099,7 @@ Switch(
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * cl1width,
-                        child: const Text("DEPART",
+                        child: const Text("bus",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -952,14 +1107,6 @@ Switch(
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * cl2width,
-                        child: const Text("LIGNE",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * cl3width,
                         child: const Text("DESTINATION FR ",
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -967,8 +1114,40 @@ Switch(
                                 color: Colors.white)),
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * cl4width,
+                        width: MediaQuery.of(context).size.width * cl3width,
                         child: const Text("DESTINATION AR",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * cl4width,
+                        child: const Text("DEPART",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * cl5width,
+                        child: const Text("ARRIVEE",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * cl6width,
+                        child: const Text("STATUS",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * cl7width,
+                        child: const Text("STATUS FR",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -981,21 +1160,20 @@ Switch(
                   child: Container(
                     color: Colors.black54,
                     child: Consumer<AppProvider>(
-                      builder: (_, data, __) => Stack(
-                        children: [
-                          ListView.builder(
+                      builder: (_, data, __) => Stack(children: [
+                        ListView.builder(
                           itemCount: data.getTrips().length,
                           itemBuilder: (context, i) {
                             return Row(children: [
                               SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * cl0width,
+                                width: MediaQuery.of(context).size.width *
+                                    cl0width,
                                 child: PopupMenuButton<String>(
                                     onSelected: (String item) async {
                                       if (item == "edit") {
                                         editTrip(data.getTrips()[i]);
                                       }
-                      
+
                                       if (item == "delete") {
                                         /*  await _deleteTrip(
                                                 data.getTrips()[i].key, context);*/
@@ -1019,17 +1197,19 @@ Switch(
                               SizedBox(
                                   width: MediaQuery.of(context).size.width *
                                       cl1width,
-                                  child: Text(getTime(data.getTrips()[i].depart),
+                                  child: Text(data.getTrips()[i].bus.toString(),
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                           letterSpacing: 1,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
-                                          color: Color(0xFFFF8C00)))),
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255)))),
                               SizedBox(
                                   width: MediaQuery.of(context).size.width *
                                       cl2width,
-                                  child: Text(data.getTrips()[i].ligne.toString(),
+                                  child: Text(
+                                      data.getTrips()[i].voyage_fr.toString(),
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                           letterSpacing: 1,
@@ -1038,36 +1218,83 @@ Switch(
                                           color: Color.fromARGB(
                                               255, 255, 255, 255)))),
                               SizedBox(
-                                  width: MediaQuery.of(context).size.width *
-                                      cl3width,
-                                  child: Text(
-                                      data.getTrips()[i].frDestination.toString(),
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          letterSpacing: 1,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255)))),
+                                width: MediaQuery.of(context).size.width *
+                                    cl3width,
+                                child: Text(
+                                  data.getTrips()[i].voyage.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    letterSpacing: 1,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 14, 235, 32),
+                                  ),
+                                ),
+                              ),
                               SizedBox(
-                                  width: MediaQuery.of(context).size.width *
-                                      cl4width,
-                                  child: Text(
-                                      data.getTrips()[i].arDestination.toString(),
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          letterSpacing: 1,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              Color.fromARGB(255, 14, 235, 32)))),
+                                width: MediaQuery.of(context).size.width *
+                                    cl4width,
+                                child: Text(
+                                  getTime(data.getTrips()[i].t_depart),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    letterSpacing: 1,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 14, 235, 32),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width *
+                                    cl5width,
+                                child: Text(
+                                  getTime(data.getTrips()[i].t_arrivee),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    letterSpacing: 1,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 14, 235, 32),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width *
+                                    cl6width,
+                                child: Text(
+                                  data.getTrips()[i].status.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    letterSpacing: 1,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 14, 235, 32),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width *
+                                    cl7width,
+                                child: Text(
+                                  data.getTrips()[i].status_fr.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    letterSpacing: 1,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 14, 235, 32),
+                                  ),
+                                ),
+                              ),
                             ]);
                           },
                         ),
-                   
-                   if(data.getTrips().isEmpty)
-                    const Center(child: Text("il n'y a pas de voyages"),)
-                ]  ),
+                        if (data.getTrips().isEmpty)
+                          const Center(
+                            child: Text("il n'y a pas de voyages"),
+                          )
+                      ]),
                     ),
                   ),
                 ),
