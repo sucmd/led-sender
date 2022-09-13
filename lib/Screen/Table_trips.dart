@@ -12,6 +12,7 @@ import 'package:srtm/models/service.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../Services/FireBaseService.dart';
+import '../Widget/updateDialog.dart';
 import '../models/Message.dart';
 import '../models/trips.dart';
 import '../providers/app_provider.dart';
@@ -61,17 +62,38 @@ class _TabletripsState extends State<Tabletrips> {
   final addFormvoyage = TextEditingController();
   final addFormvoyage_fr = TextEditingController();
 
+  Service addService = Service(
+    Friday: false,
+    Monday: false,
+    Saturday: false,
+    Sunday: false,
+    Thursday: false,
+    Tuesday: false,
+    Wednesday: false,
+  );
+
   final TextEditingController addFormDepart = TextEditingController();
+  final TextEditingController addFormArrive = TextEditingController();
+
+  final TextEditingController addFormStatus = TextEditingController();
+
+  final TextEditingController addFormStatus_fr = TextEditingController();
+
 /////////////////////////////////////////////////////
   late int addStartTimeTimeStamp = 0;
   late int updateStartTimeTimeStamp = 0;
 
   bool _isMedenine = true;
-
+  bool lundi = false;
   late Message msg = Message(
       message: "الشركة الجهوية للنقل بمدنين تتمنى لحرفائها الكرام سفرة ممتعة");
 
   late int? switchIndex = 0;
+
+  late int updateEndTimeTimeStamp = 0;
+
+  late int addArriveTimeTimeStamp = 0;
+
 ///////////////////////////////////////////////////
 
   getTime(int? timeStamp) {
@@ -284,7 +306,7 @@ class _TabletripsState extends State<Tabletrips> {
     updateFormArrive.text = getTime(item.t_arrivee);
     updateFormStatus.text = item.status;
     updateFormStatusFr.text = item.status_fr;
-var monday = item.service.Monday;
+    // monday = item.service.Monday;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -484,7 +506,7 @@ var monday = item.service.Monday;
                                               //converting to DateTime so that we can further format on different pattern.
                                               print("parsedTime:$parsedTime");
 
-                                              updateStartTimeTimeStamp = DateFormat
+                                              updateEndTimeTimeStamp = DateFormat
                                                       .Hm()
                                                   .parse(pickedTime
                                                       .format(context))
@@ -551,27 +573,149 @@ var monday = item.service.Monday;
                               AccordionSection(
                                   headerBackgroundColor: Colors.red,
                                   headerBackgroundColorOpened: Colors.red,
-                                  contentBorderColor:Colors.red,
-                                  header: Text("Service"),
-                                  content:  Row(children: [
-                                      Row(children: [
-                                        Text("Lundi"),
-                                         Checkbox(
-                          value: monday ,
-                          onChanged: (value) {
-                            
-setState(()=>{
-                            monday = value!
-
-});
-
-
-                          },
-                        )
-            ],),
-                                         ],)
-
-                                  ),
+                                  contentBorderColor: Colors.red,
+                                  header: const Text("Service"),
+                                  content: StatefulBuilder(
+                                      builder: (context, setState) {
+                                    return Wrap(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Lundi"),
+                                                Checkbox(
+                                                  value: item.service.Monday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          item.service.Monday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Mardi"),
+                                                Checkbox(
+                                                  value: item.service.Tuesday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          item.service.Tuesday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Mercredi"),
+                                                Checkbox(
+                                                  value: item.service.Wednesday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          item.service
+                                                                  .Wednesday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Jeudi"),
+                                                Checkbox(
+                                                  value: item.service.Thursday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          item.service
+                                                              .Thursday = value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Vendredi"),
+                                                Checkbox(
+                                                  value: item.service.Friday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          item.service.Friday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Samedi"),
+                                                Checkbox(
+                                                  value: item.service.Saturday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          item.service
+                                                              .Saturday = value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Dimanche"),
+                                                Checkbox(
+                                                  value: item.service.Sunday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          item.service.Sunday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  }))
                             ])
                           ],
                         )),
@@ -596,16 +740,29 @@ setState(()=>{
                           print('FormUpdateIsEmpty');
                         } else {
                           var timestamp = item.t_depart;
+                          var arrivee = item.t_arrivee;
 
                           var tripData = {
                             'bus': updateFormBus.text,
-                            'depart': updateStartTimeTimeStamp == 0
+                            't_depart': updateStartTimeTimeStamp == 0
                                 ? timestamp
                                 : updateStartTimeTimeStamp,
+                            't_arrivee': updateEndTimeTimeStamp == 0
+                                ? arrivee
+                                : updateEndTimeTimeStamp,
                             'status': updateFormStatus.text,
                             'status_fr': updateFormStatusFr.text,
                             'voyage_fr': updateFormFrVoyage.text,
-                            'voyage': updateFormVoyage.text
+                            'voyage': updateFormVoyage.text,
+                            'services': {
+                              "Monday": item.service.Monday,
+                              "Tuesday": item.service.Tuesday,
+                              "Wednesday": item.service.Wednesday,
+                              "Thursday": item.service.Thursday,
+                              "Friday": item.service.Friday,
+                              "Saturday": item.service.Saturday,
+                              "Sunday": item.service.Sunday
+                            }
                           };
                           _updateTrip(tripData, item.key, context);
 
@@ -635,10 +792,10 @@ setState(()=>{
   }
 
   _updateTrip(data, key, ctx) async {
-    print("data $data");
     setState(() {
       loading = true;
     });
+
     await FireBaseService(appProvider: _appProvider)
         .putDataInFireBase(data, key)
         .then((value) => {
@@ -654,19 +811,12 @@ setState(()=>{
                       bus: data['bus'],
                       voyage: data["voyage"],
                       voyage_fr: data["voyage_fr"],
-                      status: "jkjk",
-                      status_fr: "jghfyt",
-                      t_arrivee: 121021,
+                      status: data["status"],
+                      status_fr: data["status_fr"],
+                      t_arrivee: data["t_arrive"],
 
                       ///////////// update this methode //////////
-                      service: Service(
-                          Friday: true,
-                          Monday: true,
-                          Saturday: true,
-                          Sunday: true,
-                          Thursday: true,
-                          Tuesday: true,
-                          Wednesday: true),
+                      service: data['services'],
                     ),
                   ),
                   updateFormBus.clear(),
@@ -708,125 +858,389 @@ setState(()=>{
                     Form(
                       key: updateFormKey,
                       child: Column(
-                        /* mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,*/
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: TextFormField(
-                              controller: addFormDepart,
-                              textInputAction: TextInputAction
-                                  .next, //editing controller of this TextField
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  //icon of text field
-                                  labelText: "Depart" //label text of field
-                                  ),
-                              readOnly: true,
-                              validator: MultiValidator(
-                                [
-                                  RequiredValidator(
-                                      errorText: "Obligatoire * "),
-                                  //  EmailValidator(errorText: "Enter valid email id"),
-                                ],
-                              ), //set it true, so that user will not able to edit text
-                              onTap: () async {
-                                TimeOfDay? pickedTime = await showTimePicker(
-                                  initialTime: TimeOfDay.now(),
-                                  cancelText: "Annuler",
-                                  confirmText: "OK",
-                                  helpText: "Selectionner l'heure de depart",
-                                  hourLabelText: "Heure",
-                                  context: context,
-                                );
+                          Accordion(
+                            children: [
+                              AccordionSection(
+                                isOpen: true,
+                                header: const Text("Voyage"),
+                                content: Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: TextFormField(
+                                        //autovalidate: true,
+                                        controller: addFormbus,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: "bus ",
+                                        ),
+                                        validator: MultiValidator(
+                                          [
+                                            RequiredValidator(
+                                                errorText: "Obligatoire * "),
+                                            //  EmailValidator(errorText: "Enter valid email id"),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: TextFormField(
+                                        //autovalidate: true,
+                                        controller: addFormvoyage_fr,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: "DESTINATION FR",
+                                        ),
+                                        validator: MultiValidator(
+                                          [
+                                            RequiredValidator(
+                                                errorText: "Obligatoire * "),
+                                            //  EmailValidator(errorText: "Enter valid email id"),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: TextFormField(
+                                        //autovalidate: true,
+                                        controller: addFormvoyage,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: "DESTINATION AR ",
+                                        ),
+                                        validator: MultiValidator(
+                                          [
+                                            RequiredValidator(
+                                                errorText: "Obligatoire * "),
+                                            //  EmailValidator(errorText: "Enter valid email id"),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: TextFormField(
+                                        controller: addFormDepart,
+                                        textInputAction: TextInputAction
+                                            .next, //editing controller of this TextField
+                                        decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            //icon of text field
+                                            labelText:
+                                                "Depart" //label text of field
+                                            ),
+                                        readOnly: true,
+                                        validator: MultiValidator(
+                                          [
+                                            RequiredValidator(
+                                                errorText: "Obligatoire * "),
+                                            //  EmailValidator(errorText: "Enter valid email id"),
+                                          ],
+                                        ), //set it true, so that user will not able to edit text
+                                        onTap: () async {
+                                          TimeOfDay? pickedTime =
+                                              await showTimePicker(
+                                            initialTime: TimeOfDay.now(),
+                                            cancelText: "Annuler",
+                                            confirmText: "OK",
+                                            helpText:
+                                                "Selectionner l'heure de depart",
+                                            hourLabelText: "Heure",
+                                            context: context,
+                                          );
 
-                                if (pickedTime != null) {
-                                  print(
-                                      "pickedTimeFormat:${pickedTime.format(context)}");
+                                          if (pickedTime != null) {
+                                            print(
+                                                "pickedTimeFormat:${pickedTime.format(context)}");
 
-                                  DateTime parsedTime = DateFormat.Hm().parse(
-                                      pickedTime.format(context).toString());
-                                  //converting to DateTime so that we can further format on different pattern.
-                                  print("parsedTime:$parsedTime");
-                                  addStartTimeTimeStamp = DateFormat.Hm()
-                                      .parse(pickedTime.format(context))
-                                      .microsecondsSinceEpoch; //output 1970-01-01 22:53:00.000
-                                  String formattedTime =
-                                      DateFormat('HH:mm').format(parsedTime);
-                                  print(
-                                      "formattedTime:$formattedTime"); //output 14:59:00
-                                  //DateFormat() is from intl package, you can format the time on any pattern you need.
+                                            DateTime parsedTime =
+                                                DateFormat.Hm().parse(pickedTime
+                                                    .format(context)
+                                                    .toString());
+                                            //converting to DateTime so that we can further format on different pattern.
+                                            print("parsedTime:$parsedTime");
+                                            addStartTimeTimeStamp = DateFormat
+                                                    .Hm()
+                                                .parse(
+                                                    pickedTime.format(context))
+                                                .microsecondsSinceEpoch; //output 1970-01-01 22:53:00.000
+                                            String formattedTime =
+                                                DateFormat('HH:mm')
+                                                    .format(parsedTime);
+                                            print(
+                                                "formattedTime:$formattedTime"); //output 14:59:00
+                                            //DateFormat() is from intl package, you can format the time on any pattern you need.
 
-                                  setState(() {
-                                    addFormDepart.text =
-                                        formattedTime; //set the value of text field.
-                                  });
-                                } else {
-                                  print("Heure non selectionnée");
-                                }
-                              },
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: TextFormField(
-                              //autovalidate: true,
-                              controller: addFormvoyage_fr,
-                              textInputAction: TextInputAction.next,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "DESTINATION FR",
+                                            setState(() {
+                                              addFormDepart.text =
+                                                  formattedTime; //set the value of text field.
+                                            });
+                                          } else {
+                                            print("Heure non selectionnée");
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: TextFormField(
+                                        controller: addFormArrive,
+                                        textInputAction: TextInputAction
+                                            .next, //editing controller of this TextField
+                                        decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            //icon of text field
+                                            labelText:
+                                                "Arrive" //label text of field
+                                            ),
+                                        readOnly: true,
+                                        validator: MultiValidator(
+                                          [
+                                            RequiredValidator(
+                                                errorText: "Obligatoire * "),
+                                            //  EmailValidator(errorText: "Enter valid email id"),
+                                          ],
+                                        ), //set it true, so that user will not able to edit text
+                                        onTap: () async {
+                                          TimeOfDay? pickedTime =
+                                              await showTimePicker(
+                                            initialTime: TimeOfDay.now(),
+                                            cancelText: "Annuler",
+                                            confirmText: "OK",
+                                            helpText:
+                                                "Selectionner l'heure de depart",
+                                            hourLabelText: "Heure",
+                                            context: context,
+                                          );
+
+                                          if (pickedTime != null) {
+                                            print(
+                                                "pickedTimeFormat:${pickedTime.format(context)}");
+
+                                            DateTime parsedTime =
+                                                DateFormat.Hm().parse(pickedTime
+                                                    .format(context)
+                                                    .toString());
+                                            //converting to DateTime so that we can further format on different pattern.
+                                            print("parsedTime:$parsedTime");
+                                            addArriveTimeTimeStamp = DateFormat
+                                                    .Hm()
+                                                .parse(
+                                                    pickedTime.format(context))
+                                                .microsecondsSinceEpoch; //output 1970-01-01 22:53:00.000
+                                            String formattedTime =
+                                                DateFormat('HH:mm')
+                                                    .format(parsedTime);
+                                            print(
+                                                "formattedTime:$formattedTime"); //output 14:59:00
+                                            //DateFormat() is from intl package, you can format the time on any pattern you need.
+
+                                            setState(() {
+                                              addFormArrive.text =
+                                                  formattedTime; //set the value of text field.
+                                            });
+                                          } else {
+                                            print("Heure non selectionnée");
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: TextFormField(
+                                        //autovalidate: true,
+                                        controller: addFormStatus,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: "Status",
+                                        ),
+                                        validator: MultiValidator(
+                                          [
+                                            RequiredValidator(
+                                                errorText: "Obligatoire * "),
+                                            //  EmailValidator(errorText: "Enter valid email id"),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: TextFormField(
+                                        //autovalidate: true,
+                                        controller: addFormStatus_fr,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: "Status FR ",
+                                        ),
+                                        validator: MultiValidator(
+                                          [
+                                            RequiredValidator(
+                                                errorText: "Obligatoire * "),
+                                            //  EmailValidator(errorText: "Enter valid email id"),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              validator: MultiValidator(
-                                [
-                                  RequiredValidator(
-                                      errorText: "Obligatoire * "),
-                                  //  EmailValidator(errorText: "Enter valid email id"),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: TextFormField(
-                              //autovalidate: true,
-                              controller: addFormvoyage,
-                              textInputAction: TextInputAction.next,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "DESTINATION AR ",
-                              ),
-                              validator: MultiValidator(
-                                [
-                                  RequiredValidator(
-                                      errorText: "Obligatoire * "),
-                                  //  EmailValidator(errorText: "Enter valid email id"),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: TextFormField(
-                              //autovalidate: true,
-                              controller: addFormbus,
-                              textInputAction: TextInputAction.next,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "bus ",
-                              ),
-                              validator: MultiValidator(
-                                [
-                                  RequiredValidator(
-                                      errorText: "Obligatoire * "),
-                                  //  EmailValidator(errorText: "Enter valid email id"),
-                                ],
-                              ),
-                            ),
+                              AccordionSection(
+                                  headerBackgroundColor: Colors.red,
+                                  headerBackgroundColorOpened: Colors.red,
+                                  contentBorderColor: Colors.red,
+                                  header: const Text("Service"),
+                                  content: StatefulBuilder(
+                                      builder: (context, setState) {
+                                    return Wrap(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Lundi"),
+                                                Checkbox(
+                                                  value: addService.Monday,
+                                                  onChanged: (value) {
+                                                    setState(() => {
+                                                          addService.Monday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Mardi"),
+                                                Checkbox(
+                                                  value: addService.Tuesday,
+                                                  onChanged: (value) {
+                                                    setState(() => {
+                                                          addService.Tuesday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Mercredi"),
+                                                Checkbox(
+                                                  value: addService.Wednesday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          addService.Wednesday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Jeudi"),
+                                                Checkbox(
+                                                  value: addService.Thursday,
+                                                  onChanged: (value) {
+                                                    setState(() => {
+                                                          addService.Thursday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Vendredi"),
+                                                Checkbox(
+                                                  value: addService.Friday,
+                                                  onChanged: (value) {
+                                                    setState(() => {
+                                                          addService.Friday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Samedi"),
+                                                Checkbox(
+                                                  value: addService.Saturday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          addService.Saturday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text("Dimanche"),
+                                                Checkbox(
+                                                  value: addService.Sunday,
+                                                  onChanged: (value) {
+                                                    print("value is $value");
+                                                    setState(() => {
+                                                          addService.Sunday =
+                                                              value!
+                                                        });
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  }))
+                            ],
                           ),
                         ],
                       ),
@@ -844,14 +1258,30 @@ setState(()=>{
                       if (addFormbus.text.isEmpty ||
                           addFormDepart.text.isEmpty ||
                           addFormvoyage.text.isEmpty ||
-                          addFormvoyage_fr.text.isEmpty) {
+                          addFormvoyage_fr.text.isEmpty ||
+                          addFormArrive.text.isEmpty ||
+                          addFormStatus.text.isEmpty ||
+                          addFormStatus_fr.text.isEmpty) {
                       } else {
                         var tripData = {
                           'bus': addFormbus.text,
-                          'depart': addStartTimeTimeStamp,
+                          't_depart': addStartTimeTimeStamp,
                           'voyage_fr': addFormvoyage_fr.text,
                           'voyage': addFormvoyage.text,
+                          "t_arrivee": addArriveTimeTimeStamp,
+                          "status_fr": addFormStatus.text,
+                          'status': addFormStatus_fr.text,
+                          "services": {
+                            "Monday": addService.Monday,
+                            'Tuesday': addService.Tuesday,
+                            "Wednesday": addService.Wednesday,
+                            "Thursday": addService.Thursday,
+                            "Friday": addService.Friday,
+                            "Saturday": addService.Saturday,
+                            "Sunday": addService.Sunday
+                          }
                         };
+
                         sendTrips(tripData, context);
                         Navigator.of(context).pop();
 
@@ -859,6 +1289,18 @@ setState(()=>{
                         addFormDepart.clear();
                         addFormvoyage.clear();
                         addFormvoyage_fr.clear();
+                        addFormArrive.clear();
+                        addFormStatus.clear();
+                        addFormStatus_fr.clear();
+                        addService = Service(
+                            Friday: false,
+                            Monday: false,
+                            Saturday: false,
+                            Sunday: false,
+                            Thursday: false,
+                            Tuesday: false,
+                            Wednesday: false);
+                        addArriveTimeTimeStamp = 0;
                         addStartTimeTimeStamp = 0;
                       }
                     },
@@ -884,7 +1326,10 @@ setState(()=>{
   }
 
   sendTrips(data, ctx) async {
-    print("$data");
+    print(" add $data");
+
+    print("service ${data['services']}");
+
     setState(() {
       loading = true;
     });
@@ -902,18 +1347,18 @@ setState(()=>{
                         bus: data['bus'],
                         voyage: data["voyage"],
                         voyage_fr: data["voyage_fr"],
-                        status: "hjh",
-                        status_fr: "kjhhjgjk",
-                        t_arrivee: 1102120,
-                        ///// update this methode ////
+                        status: data["status"],
+                        status_fr: data["status_fr"],
+                        t_arrivee: data["t_arrivee"],
                         service: Service(
-                            Friday: true,
-                            Monday: true,
-                            Saturday: true,
-                            Sunday: true,
-                            Thursday: true,
-                            Tuesday: true,
-                            Wednesday: true)),
+                          Friday: data["services"]['Friday'],
+                          Monday: data["services"]['Monday'],
+                          Saturday: data["services"]['Saturday'],
+                          Sunday: data["services"]['Sunday'],
+                          Thursday: data["services"]['Thursday'],
+                          Tuesday: data["services"]['Tuesday'],
+                          Wednesday: data["services"]['Wednesday'],
+                        )),
                   ),
                 }
             })
@@ -1220,6 +1665,12 @@ Switch(
                                     onSelected: (String item) async {
                                       if (item == "edit") {
                                         editTrip(data.getTrips()[i]);
+                                        /*                                    
+Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  UpdateDialog(item:data.getTrips()[i] )),
+  );*/
+
                                       }
 
                                       if (item == "delete") {

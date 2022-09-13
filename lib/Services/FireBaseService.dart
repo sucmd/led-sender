@@ -64,11 +64,10 @@ class FireBaseService {
 
   DeleteDataInFireBase(key) async {
     http.Response? response;
-
     try {
       response = await fireBaseClient.delete(
         Uri.parse(
-          "https://medenineproject-default-rtdb.firebaseio.com/medenineproject-default-rtdb/${appProvider.firebaseUrl}/$key.json",
+          "https://transitdatapub-default-rtdb.firebaseio.com/trips/$key.json",
         ),
       );
     } catch (e) {

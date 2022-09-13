@@ -11,7 +11,8 @@ class Trips {
   String status;
   Service service;
   Trips(
-      {this.key,
+      {
+        this.key,
       required this.bus,
       required this.t_arrivee,
       required this.t_depart,

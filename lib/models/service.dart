@@ -1,11 +1,11 @@
 class Service {
-  late final bool Monday;
-  final bool Tuesday;
-  final bool Wednesday;
-  final bool Thursday;
-  final bool Friday;
-  final bool Saturday;
-  final bool Sunday;
+  late  bool? Monday;
+ bool Tuesday;
+  bool Wednesday;
+   bool Thursday;
+   bool Friday;
+   bool Saturday;
+   bool Sunday;
 
   Service(
       {required this.Monday,
