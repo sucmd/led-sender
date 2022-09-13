@@ -1,5 +1,5 @@
 class Service {
-  final bool Monday;
+  late final bool Monday;
   final bool Tuesday;
   final bool Wednesday;
   final bool Thursday;

@@ -55,6 +55,7 @@ dependencies:
   path: ^1.8.1
   connectivity_plus: ^2.3.6+1
   toggle_switch: ^2.0.1
+  accordion: ^2.5.1
 
 
 dev_dependencies:

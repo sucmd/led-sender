@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -283,7 +284,7 @@ class _TabletripsState extends State<Tabletrips> {
     updateFormArrive.text = getTime(item.t_arrivee);
     updateFormStatus.text = item.status;
     updateFormStatusFr.text = item.status_fr;
-
+var monday = item.service.Monday;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -302,227 +303,276 @@ class _TabletripsState extends State<Tabletrips> {
                           /* mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,*/
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                //autovalidate: true,
-                                controller: updateFormBus,
-                                textInputAction: TextInputAction.next,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "bus",
-                                ),
-                                validator: MultiValidator(
-                                  [
-                                    RequiredValidator(
-                                        errorText: "Obligatoire * "),
-                                    //  EmailValidator(errorText: "Enter valid email id"),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                //autovalidate: true,
-                                controller: updateFormFrVoyage,
-                                textInputAction: TextInputAction.next,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "DESTINATION FR ",
-                                ),
-                                validator: MultiValidator(
-                                  [
-                                    RequiredValidator(
-                                        errorText: "Obligatoire * "),
-                                    //  EmailValidator(errorText: "Enter valid email id"),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                //autovalidate: true,
-                                controller: updateFormVoyage,
-                                textInputAction: TextInputAction.next,
+                            Accordion(children: [
+                              AccordionSection(
+                                  isOpen: true,
+                                  header: const Text("Voyage"),
+                                  content: Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: TextFormField(
+                                          //autovalidate: true,
+                                          controller: updateFormBus,
+                                          textInputAction: TextInputAction.next,
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: "bus",
+                                          ),
+                                          validator: MultiValidator(
+                                            [
+                                              RequiredValidator(
+                                                  errorText: "Obligatoire * "),
+                                              //  EmailValidator(errorText: "Enter valid email id"),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: TextFormField(
+                                          //autovalidate: true,
+                                          controller: updateFormFrVoyage,
+                                          textInputAction: TextInputAction.next,
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: "DESTINATION FR ",
+                                          ),
+                                          validator: MultiValidator(
+                                            [
+                                              RequiredValidator(
+                                                  errorText: "Obligatoire * "),
+                                              //  EmailValidator(errorText: "Enter valid email id"),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: TextFormField(
+                                          //autovalidate: true,
+                                          controller: updateFormVoyage,
+                                          textInputAction: TextInputAction.next,
 
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "DESTINATION AR ",
-                                ),
-                                validator: MultiValidator(
-                                  [
-                                    RequiredValidator(
-                                        errorText: "Obligatoire * "),
-                                    //  EmailValidator(errorText: "Enter valid email id"),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                controller: updateFormDepart,
-                                textInputAction: TextInputAction
-                                    .next, //editing controller of this TextField
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    //icon of text field
-                                    labelText: "Depart",
-                                    hintText: getTime(
-                                        item.t_depart) //label text of field
-                                    ),
-                                readOnly: true,
-                                validator: MultiValidator(
-                                  [
-                                    RequiredValidator(
-                                        errorText: "Obligatoire * "),
-                                    //  EmailValidator(errorText: "Enter valid email id"),
-                                  ],
-                                ), //set it true, so that user will not able to edit text
-                                onTap: () async {
-                                  TimeOfDay? pickedTime = await showTimePicker(
-                                    initialTime: TimeOfDay.now(),
-                                    cancelText: "Annuler",
-                                    confirmText: "OK",
-                                    helpText: "Selectionner l'heure de depart",
-                                    hourLabelText: "Heure",
-                                    context: context,
-                                  );
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: "DESTINATION AR ",
+                                          ),
+                                          validator: MultiValidator(
+                                            [
+                                              RequiredValidator(
+                                                  errorText: "Obligatoire * "),
+                                              //  EmailValidator(errorText: "Enter valid email id"),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: TextFormField(
+                                          controller: updateFormDepart,
+                                          textInputAction: TextInputAction
+                                              .next, //editing controller of this TextField
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              //icon of text field
+                                              labelText: "Depart",
+                                              hintText: getTime(item
+                                                  .t_depart) //label text of field
+                                              ),
+                                          readOnly: true,
+                                          validator: MultiValidator(
+                                            [
+                                              RequiredValidator(
+                                                  errorText: "Obligatoire * "),
+                                              //  EmailValidator(errorText: "Enter valid email id"),
+                                            ],
+                                          ), //set it true, so that user will not able to edit text
+                                          onTap: () async {
+                                            TimeOfDay? pickedTime =
+                                                await showTimePicker(
+                                              initialTime: TimeOfDay.now(),
+                                              cancelText: "Annuler",
+                                              confirmText: "OK",
+                                              helpText:
+                                                  "Selectionner l'heure de depart",
+                                              hourLabelText: "Heure",
+                                              context: context,
+                                            );
 
-                                  if (pickedTime != null) {
-                                    print(
-                                        "pickedTimeFormat:${pickedTime.format(context)}");
+                                            if (pickedTime != null) {
+                                              print(
+                                                  "pickedTimeFormat:${pickedTime.format(context)}");
 
-                                    DateTime parsedTime = DateFormat.Hm().parse(
-                                        pickedTime.format(context).toString());
-                                    //converting to DateTime so that we can further format on different pattern.
-                                    print("parsedTime:$parsedTime");
+                                              DateTime parsedTime =
+                                                  DateFormat.Hm().parse(
+                                                      pickedTime
+                                                          .format(context)
+                                                          .toString());
+                                              //converting to DateTime so that we can further format on different pattern.
+                                              print("parsedTime:$parsedTime");
 
-                                    updateStartTimeTimeStamp = DateFormat.Hm()
-                                        .parse(pickedTime.format(context))
-                                        .microsecondsSinceEpoch; //output 1970-01-01 22:53:00.000
-                                    String formattedTime =
-                                        DateFormat('HH:mm').format(parsedTime);
-                                    print(
-                                        "formattedTime:$formattedTime"); //output 14:59:00
-                                    //DateFormat() is from intl package, you can format the time on any pattern you need.
+                                              updateStartTimeTimeStamp = DateFormat
+                                                      .Hm()
+                                                  .parse(pickedTime
+                                                      .format(context))
+                                                  .microsecondsSinceEpoch; //output 1970-01-01 22:53:00.000
+                                              String formattedTime =
+                                                  DateFormat('HH:mm')
+                                                      .format(parsedTime);
+                                              print(
+                                                  "formattedTime:$formattedTime"); //output 14:59:00
+                                              //DateFormat() is from intl package, you can format the time on any pattern you need.
 
-                                    setState(() {
-                                      updateFormDepart.text =
-                                          formattedTime; //set the value of text field.
-                                    });
-                                  } else {
-                                    print("Heure non selectionnée");
-                                  }
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                controller: updateFormArrive,
-                                textInputAction: TextInputAction
-                                    .next, //editing controller of this TextField
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    //icon of text field
-                                    labelText: "Arrivee",
-                                    hintText: getTime(
-                                        item.t_arrivee) //label text of field
-                                    ),
-                                readOnly: true,
-                                validator: MultiValidator(
-                                  [
-                                    RequiredValidator(
-                                        errorText: "Obligatoire * "),
-                                    //  EmailValidator(errorText: "Enter valid email id"),
-                                  ],
-                                ), //set it true, so that user will not able to edit text
-                                onTap: () async {
-                                  TimeOfDay? pickedTime = await showTimePicker(
-                                    initialTime: TimeOfDay.now(),
-                                    cancelText: "Annuler",
-                                    confirmText: "OK",
-                                    helpText: "Selectionner l'heure de depart",
-                                    hourLabelText: "Heure",
-                                    context: context,
-                                  );
+                                              setState(() {
+                                                updateFormDepart.text =
+                                                    formattedTime; //set the value of text field.
+                                              });
+                                            } else {
+                                              print("Heure non selectionnée");
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: TextFormField(
+                                          controller: updateFormArrive,
+                                          textInputAction: TextInputAction
+                                              .next, //editing controller of this TextField
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              //icon of text field
+                                              labelText: "Arrivee",
+                                              hintText: getTime(item
+                                                  .t_arrivee) //label text of field
+                                              ),
+                                          readOnly: true,
+                                          validator: MultiValidator(
+                                            [
+                                              RequiredValidator(
+                                                  errorText: "Obligatoire * "),
+                                              //  EmailValidator(errorText: "Enter valid email id"),
+                                            ],
+                                          ), //set it true, so that user will not able to edit text
+                                          onTap: () async {
+                                            TimeOfDay? pickedTime =
+                                                await showTimePicker(
+                                              initialTime: TimeOfDay.now(),
+                                              cancelText: "Annuler",
+                                              confirmText: "OK",
+                                              helpText:
+                                                  "Selectionner l'heure de depart",
+                                              hourLabelText: "Heure",
+                                              context: context,
+                                            );
 
-                                  if (pickedTime != null) {
-                                    print(
-                                        "pickedTimeFormat:${pickedTime.format(context)}");
+                                            if (pickedTime != null) {
+                                              print(
+                                                  "pickedTimeFormat:${pickedTime.format(context)}");
 
-                                    DateTime parsedTime = DateFormat.Hm().parse(
-                                        pickedTime.format(context).toString());
-                                    //converting to DateTime so that we can further format on different pattern.
-                                    print("parsedTime:$parsedTime");
+                                              DateTime parsedTime =
+                                                  DateFormat.Hm().parse(
+                                                      pickedTime
+                                                          .format(context)
+                                                          .toString());
+                                              //converting to DateTime so that we can further format on different pattern.
+                                              print("parsedTime:$parsedTime");
 
-                                    updateStartTimeTimeStamp = DateFormat.Hm()
-                                        .parse(pickedTime.format(context))
-                                        .microsecondsSinceEpoch; //output 1970-01-01 22:53:00.000
-                                    String formattedTime =
-                                        DateFormat('HH:mm').format(parsedTime);
-                                    print(
-                                        "formattedTime:$formattedTime"); //output 14:59:00
-                                    //DateFormat() is from intl package, you can format the time on any pattern you need.
+                                              updateStartTimeTimeStamp = DateFormat
+                                                      .Hm()
+                                                  .parse(pickedTime
+                                                      .format(context))
+                                                  .microsecondsSinceEpoch; //output 1970-01-01 22:53:00.000
+                                              String formattedTime =
+                                                  DateFormat('HH:mm')
+                                                      .format(parsedTime);
+                                              print(
+                                                  "formattedTime:$formattedTime"); //output 14:59:00
+                                              //DateFormat() is from intl package, you can format the time on any pattern you need.
 
-                                    setState(() {
-                                      updateFormArrive.text =
-                                          formattedTime; //set the value of text field.
-                                    });
-                                  } else {
-                                    print("Heure non selectionnée");
-                                  }
-                                },
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                //autovalidate: true,
-                                controller: updateFormStatus,
-                                textInputAction: TextInputAction.next,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Status",
-                                ),
-                                validator: MultiValidator(
-                                  [
-                                    RequiredValidator(
-                                        errorText: "Obligatoire * "),
-                                    //  EmailValidator(errorText: "Enter valid email id"),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                //autovalidate: true,
-                                controller: updateFormStatusFr,
-                                textInputAction: TextInputAction.next,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Status  fr ",
-                                ),
-                                validator: MultiValidator(
-                                  [
-                                    RequiredValidator(
-                                        errorText: "Obligatoire * "),
-                                    //  EmailValidator(errorText: "Enter valid email id"),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                              setState(() {
+                                                updateFormArrive.text =
+                                                    formattedTime; //set the value of text field.
+                                              });
+                                            } else {
+                                              print("Heure non selectionnée");
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: TextFormField(
+                                          //autovalidate: true,
+                                          controller: updateFormStatus,
+                                          textInputAction: TextInputAction.next,
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: "Status",
+                                          ),
+                                          validator: MultiValidator(
+                                            [
+                                              RequiredValidator(
+                                                  errorText: "Obligatoire * "),
+                                              //  EmailValidator(errorText: "Enter valid email id"),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: TextFormField(
+                                          //autovalidate: true,
+                                          controller: updateFormStatusFr,
+                                          textInputAction: TextInputAction.next,
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: "Status  fr ",
+                                          ),
+                                          validator: MultiValidator(
+                                            [
+                                              RequiredValidator(
+                                                  errorText: "Obligatoire * "),
+                                              //  EmailValidator(errorText: "Enter valid email id"),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                              AccordionSection(
+                                  headerBackgroundColor: Colors.red,
+                                  headerBackgroundColorOpened: Colors.red,
+                                  contentBorderColor:Colors.red,
+                                  header: Text("Service"),
+                                  content:  Row(children: [
+                                      Row(children: [
+                                        Text("Lundi"),
+                                         Checkbox(
+                          value: monday ,
+                          onChanged: (value) {
+                            
+setState(()=>{
+                            monday = value!
+
+});
+
+
+                          },
+                        )
+            ],),
+                                         ],)
+
+                                  ),
+                            ])
                           ],
                         )),
                   ],
@@ -549,13 +599,11 @@ class _TabletripsState extends State<Tabletrips> {
 
                           var tripData = {
                             'bus': updateFormBus.text,
-                            
                             'depart': updateStartTimeTimeStamp == 0
                                 ? timestamp
                                 : updateStartTimeTimeStamp,
-
-                                'status':updateFormStatus.text,
-                                'status_fr':updateFormStatusFr.text,
+                            'status': updateFormStatus.text,
+                            'status_fr': updateFormStatusFr.text,
                             'voyage_fr': updateFormFrVoyage.text,
                             'voyage': updateFormVoyage.text
                           };
